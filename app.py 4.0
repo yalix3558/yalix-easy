@@ -9,36 +9,45 @@ st.set_page_config(page_title="Yalix Easy", page_icon="🎙️")
 st.title("🎙️ Yalix Easy")
 st.markdown("### *Type it. Hear it. Easy.*")
 
+# --- YENİ ÖZELLİK: DİL SEÇİMİ ---
+language_option = st.selectbox(
+    "Select Language / Dil Seçin:",
+    ("English", "Turkish")
+)
+
+# Dil kodlarını sisteme tanıtıyoruz
+lang_code = 'en' if language_option == "English" else 'tr'
+
 # Yazı Giriş Kutusu
-user_text = st.text_area("Enter your text here:", placeholder="Type something cool...", height=150)
+placeholder_text = "Type something..." if lang_code == 'en' else "Bir şeyler yazın..."
+user_text = st.text_area(f"Enter {language_option} text:", placeholder=placeholder_text, height=150)
 
 # Seslendirme ve İndirme Bölümü
 if st.button("🚀 CONVERT TO VOICE", use_container_width=True):
     if user_text:
         with st.spinner("Yalix Easy is processing..."):
-            # 1. Metni sese çevir
-            tts = gTTS(text=user_text, lang='en')
+            # Seçilen dile göre sesi oluştur
+            tts = gTTS(text=user_text, lang=lang_code)
             
-            # 2. Sesi hafızaya kaydet
             audio_fp = io.BytesIO()
             tts.write_to_fp(audio_fp)
             audio_bytes = audio_fp.getvalue()
             
-            # 3. SESİ OYNAT
+            # SESİ OYNAT
             st.audio(audio_bytes, format='audio/mp3')
             
-            # 4. YENİ ÖZELLİK: SESİ İNDİR BUTONU
+            # SESİ İNDİR BUTONU
             st.download_button(
-                label="📥 DOWNLOAD AUDIO (MP3)",
+                label=f"📥 DOWNLOAD {language_option} AUDIO",
                 data=audio_bytes,
-                file_name="yalix_easy_audio.mp3",
+                file_name=f"yalix_easy_{lang_code}.mp3",
                 mime="audio/mp3",
                 use_container_width=True
             )
             
-            st.success("Perfect! You can play or download your voice now. 😎")
+            st.success("Quality sound is ready! 😎")
     else:
-        st.warning("Please enter some text first, Boss!")
+        st.warning("Please enter some text first!")
 
 # Şirket İmzası
 st.caption("© 2026 Yalix Easy Software Co. | CEO: Yiğit Ali Arslan Doğan")
