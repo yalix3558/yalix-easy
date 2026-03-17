@@ -1,33 +1,34 @@
 import streamlit as st
+from gtts import gTTS # Google'ın ses motorunu şirketimize bağlıyoruz
+import io
 
-# 1. Sayfa Ayarları (Karanlık Mod ve Başlık)
-st.set_page_config(page_title="Yalix Easy", page_icon="🎙️", layout="centered")
+# Sayfa Ayarları
+st.set_page_config(page_title="Yalix Easy", page_icon="🎙️")
 
-# 2. Şirket Logosu ve Sloganı
+# Başlık ve Tasarım
 st.title("🎙️ Yalix Easy")
 st.markdown("### *Type it. Hear it. Easy.*")
 
-# 3. Kullanıcı Giriş Alanı (Senin istediğin o sade tasarım)
-user_text = st.text_area("Enter your text below:", placeholder="Welcome to Yalix Easy! The best app in the world...", height=200)
+# Yazı Giriş Kutusu
+user_text = st.text_area("Enter your text here:", placeholder="Hello Yiğit Ali! Let's build the future...", height=150)
 
-# 4. Basit Ses Seçenekleri
-st.write("Choose your voice style:")
-col1, col2, col3 = st.columns(3)
-with col1:
-    gamer = st.checkbox("Gamer Voice 🎮")
-with col2:
-    alien = st.checkbox("Alien Voice 👽")
-with col3:
-    robot = st.checkbox("Fast Robot 🤖")
-
-# 5. O Efsanevi Büyük Buton
-st.divider() # Araya şık bir çizgi çeker
+# Seslendirme Butonu
 if st.button("🚀 CONVERT TO VOICE", use_container_width=True):
     if user_text:
-        st.success("Yalix Easy is processing your request... Done! 😎")
-        # Burası ileride sesi gerçekten çalacak olan kısım!
+        with st.spinner("Yalix Easy is thinking..."):
+            # 1. Metni sese çeviriyoruz
+            tts = gTTS(text=user_text, lang='en')
+            
+            # 2. Sesi hafızaya alıyoruz
+            audio_data = io.BytesIO()
+            tts.write_to_fp(audio_data)
+            
+            # 3. İŞTE SES BURADA! Siteye bir ses çalar ekliyoruz:
+            st.audio(audio_data, format='audio/mp3')
+            
+            st.success("Now you can listen, Boss! 😎")
     else:
-        st.warning("Please enter some text first, Boss!")
+        st.warning("Please enter some text first!")
 
-# 6. Alt Bilgi
-st.caption("© 2026 Yalix Easy Software Co. | Developed by Yiğit Ali Arslan Doğan")
+# Şirket İmzası
+st.caption("© 2026 Yalix Easy Software Co. | CEO: Yiğit Ali Arslan Doğan")
