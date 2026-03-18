@@ -3,28 +3,42 @@ from gtts import gTTS
 import io
 
 # Sayfa Ayarları
-st.set_page_config(page_title="Yalix Easy", page_icon="🎙️")
+st.set_page_config(page_title="Yalix Easy", page_icon="🦁")
 
-# Başlık ve Tasarım
-st.title("🎙️ Yalix Easy")
-st.markdown("### *Type it. Hear it. Easy.*")
+# --- GALATASARAY TASARIMI (CSS) ---
+st.markdown("""
+    <style>
+    .stButton>button {
+        background-color: #A32638; /* GS Kırmızısı */
+        color: #FDB912; /* GS Sarısı */
+        border-radius: 20px;
+        border: 2px solid #FDB912;
+        font-weight: bold;
+    }
+    .stButton>button:hover {
+        background-color: #FDB912;
+        color: #A32638;
+    }
+    h1 { color: #FDB912; }
+    h3 { color: #A32638; }
+    </style>
+    """, unsafe_allow_stdio=True)
+
+# Başlık
+st.title("🦁 Yalix Easy: GS Edition")
+st.markdown("### *Şampiyonların Seslendirme Uygulaması*")
 
 # --- DİL SEÇİMİ ---
-language_option = st.selectbox(
-    "Select Language / Dil Seçin:",
-    ("English", "Turkish")
-)
-
-lang_code = 'en' if language_option == "English" else 'tr'
+language_option = st.selectbox("Dil Seçin / Select Language:", ("Turkish", "English"))
+lang_code = 'tr' if language_option == "Turkish" else 'en'
 
 # Yazı Giriş Kutusu
-placeholder_text = "Type something..." if lang_code == 'en' else "Bir şeyler yazın..."
-user_text = st.text_area(f"Enter {language_option} text:", placeholder=placeholder_text, height=150)
+user_text = st.text_area("Metninizi buraya yazın:", placeholder="Şampiyon Galatasaray!...", height=150)
 
-# Seslendirme ve İndirme Bölümü
-if st.button("🚀 CONVERT TO VOICE", use_container_width=True):
+# Seslendirme ve İndirme
+if st.button("🚀 SESLENDİR VE İNDİR", use_container_width=True):
     if user_text:
-        with st.spinner("Yalix Easy is processing..."):
+        with st.spinner("Yalix Easy hazırlanıyor..."):
             tts = gTTS(text=user_text, lang=lang_code)
             audio_fp = io.BytesIO()
             tts.write_to_fp(audio_fp)
@@ -33,22 +47,18 @@ if st.button("🚀 CONVERT TO VOICE", use_container_width=True):
             st.audio(audio_bytes, format='audio/mp3')
             
             st.download_button(
-                label=f"📥 DOWNLOAD {language_option} AUDIO",
+                label="📥 DOSYAYI İNDİR (MP3)",
                 data=audio_bytes,
-                file_name=f"yalix_easy_{lang_code}.mp3",
+                file_name=f"yalix_easy_gs.mp3",
                 mime="audio/mp3",
                 use_container_width=True
             )
-            st.success("Quality sound is ready! 😎")
     else:
-        st.warning("Please enter some text first!")
+        st.warning("Lütfen önce bir metin yazın patron!")
 
-# --- YENİ ÖZELLİK: YOUTUBE BUTONU ---
-st.divider() # Araya şık bir çizgi çeker
-st.markdown("### 📢 Stay Connected!")
-youtube_url = "https://www.youtube.com/@Yalixgamer" # Senin kanal linkin
+# --- YOUTUBE BUTONU ---
+st.divider()
+st.link_button("📺 YALIXGAMER YOUTUBE KANALI", "https://www.youtube.com/@Yalixgamer", use_container_width=True)
 
-st.link_button("📺 FOLLOW ME ON YOUTUBE (YalixGamer)", youtube_url, use_container_width=True, type="primary")
-
-# Şirket İmzası
+# İmza
 st.caption("© 2026 Yalix Easy Software Co. | CEO: Yiğit Ali Arslan Doğan")
