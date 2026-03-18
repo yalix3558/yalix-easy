@@ -9,10 +9,10 @@ st.set_page_config(page_title="Yalix Easy", page_icon="🏟️")
 st.sidebar.header("🏟️ Choose Your Home Ground")
 team = st.sidebar.radio("Stadyumunuzu Seçin:", 
                          ("Galatasaray (Rams Park) 🦁", 
-                          "Fenerbahçe (Chobani Stadyumu) 🐂", 
+                          "Fenerbahçe (Ülker Stadyumu) 🐂", 
                           "Beşiktaş (Tüpraş Stadyumu) 🦅"))
 
-# Takımlara göre renk ve ÇALIŞAN STADYUM RESİMLERİ
+# Takımlara göre renk ve STADYUM RESİMLERİ
 if "Galatasaray" in team:
     primary_color = "#A32638" 
     secondary_color = "#FDB912" 
@@ -22,14 +22,14 @@ elif "Fenerbahçe" in team:
     primary_color = "#002366" 
     secondary_color = "#FDB912" 
     img_url = "https://upload.wikimedia.org/wikipedia/commons/3/30/Şükrü_Saracoğlu_Stadyumu%2C_İstanbul.jpg" 
-    stadium_name = "Ülker Stadyumu 🐂"
+    stadium_name = "Chobani Stadyumu 🐂"
 else: 
     primary_color = "#000000" 
     secondary_color = "#FFFFFF" 
     img_url = "https://upload.wikimedia.org/wikipedia/commons/4/4b/Tüpraş_Stadyumu_Gece_Görünümü.jpg" 
     stadium_name = "Tüpraş Stadyumu 🦅"
 
-# Dinamik CSS
+# Dinamik CSS Entegrasyonu
 st.markdown(f"""
     <style>
     .stApp {{ background-color: #0E1117; }}
@@ -69,12 +69,12 @@ if st.button("🚀 CONVERT TO VOICE"):
     else:
         st.warning("Please type something first!")
 
-# --- YENİ ÖZELLİK: YOUTUBE VİDEO GÖMME ---
+# --- YENİ ÖZELLİK: EN SON VİDEO GÖMME ---
 st.divider()
 st.markdown("## 📺 Watch My Latest Content!")
-# Senin GeoGuessr videonun linkini buraya ekledik
-video_url = "https://www.youtube.com/watch?v=lid2Y4JDMt8"
-st.video(video_url)
+# Senin en son yüklediğin Fatal Frame II videonun linki
+latest_video_url = "https://www.youtube.com/watch?v=833sZ0qW83Q"
+st.video(latest_video_url)
 
 # --- YOUTUBE BUTONU VE İMZA ---
 st.link_button("📺 VISIT YALIXGAMER CHANNEL", "https://www.youtube.com/@Yalixgamer")
