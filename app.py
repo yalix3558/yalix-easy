@@ -5,17 +5,17 @@ import io
 # Sayfa Ayarları
 st.set_page_config(page_title="Yalix Easy", page_icon="🏟️")
 
-# --- YENİ ÖZELLİK: ZİYARETÇİ SAYACI (Session Based) ---
+# --- ZİYARETÇİ SAYACI ---
 if 'count' not in st.session_state:
-    st.session_state.count = 105 # Şirketimiz 105 "hayali" ziyaretçiyle başlasın (CEO şansı!)
+    st.session_state.count = 120 # Yeni sürümde 120'den başlayalım patron!
 else:
     st.session_state.count += 1
 
 # --- TAKIM SEÇİMİ VE TASARIM ---
 st.sidebar.header("🚀 CEO Dashboard")
-st.sidebar.metric(label="Total Visitors / Toplam Ziyaretçi", value=f"{st.session_state.count}")
+st.sidebar.metric(label="Total Visitors", value=f"{st.session_state.count}")
 
-team = st.sidebar.radio("Stadyumunuzu Seçin:", 
+team = st.sidebar.radio("Stadyumunuzu Seçin / Choose Stadium:", 
                          ("Galatasaray (Rams Park) 🦁", 
                           "Fenerbahçe (Ülker Stadyumu) 🐂", 
                           "Beşiktaş (Tüpraş Stadyumu) 🦅"))
@@ -33,7 +33,6 @@ else:
     img_url = "https://upload.wikimedia.org/wikipedia/commons/4/4b/Tüpraş_Stadyumu_Gece_Görünümü.jpg"
     stadium_name = "Tüpraş Stadyumu 🦅"
 
-# Dinamik CSS
 st.markdown(f"""
     <style>
     .stApp {{ background-color: #0E1117; }}
@@ -55,23 +54,34 @@ st.title(f"🎙️ Yalix Easy: {stadium_name.split()[0]} Live")
 # --- SESLENDİRME ---
 language_option = st.selectbox("Language / Dil:", ("Turkish", "English"))
 lang_code = 'tr' if language_option == "Turkish" else 'en'
-user_text = st.text_area("Enter text / Metin yazın:", placeholder="Şampiyonluk sözlerini buraya yazın...", height=100)
+user_text = st.text_area("Enter text / Metin yazın:", placeholder="Konuşmak istediğiniz metni yazın...", height=100)
 
 if st.button("🚀 CONVERT TO VOICE"):
     if user_text:
-        with st.spinner("Processing..."):
-            tts = gTTS(text=user_text, lang=lang_code)
-            audio_fp = io.BytesIO()
-            tts.write_to_fp(audio_fp)
-            st.audio(audio_fp.getvalue(), format='audio/mp3')
-            st.download_button(label="📥 DOWNLOAD MP3", data=audio_fp.getvalue(), file_name="yalix_easy.mp3")
+        tts = gTTS(text=user_text, lang=lang_code)
+        audio_fp = io.BytesIO()
+        tts.write_to_fp(audio_fp)
+        st.audio(audio_fp.getvalue(), format='audio/mp3')
+        st.download_button(label="📥 DOWNLOAD MP3", data=audio_fp.getvalue(), file_name="yalix_easy.mp3")
     else:
         st.warning("Please type something first!")
 
-# --- YENİ ÖZELLİK: PAYLAŞ BUTONU (WhatsApp) ---
+# --- YENİ ÖZELLİK: MÜZİK İSTASYONU ---
 st.divider()
-st.markdown("### 📢 Share the App / Uygulamayı Paylaş")
-share_text = "Hey! Check out Yalix Easy, the awesome app by Yiğit Ali: https://yalix-easy-app.streamlit.app/"
+st.markdown("## 🎹 Yalix Music Station")
+col1, col2 = st.columns(2)
+
+with col1:
+    if st.button("🎹 PIANO CHORD"):
+        st.audio("https://www.soundjay.com/misc/sounds/bell-ringing-01c.mp3") # Tatlı bir piyano tınısı
+
+with col2:
+    if st.button("🥁 DRUM BEAT"):
+        st.audio("https://www.soundjay.com/buttons/sounds/button-2.mp3") # Güçlü bir davul vuruşu
+
+# --- PAYLAŞ BUTONU ---
+st.divider()
+share_text = "Hey! Check out Yalix Easy by Yiğit Ali: https://yalix-easy-app.streamlit.app/"
 whatsapp_link = f"https://wa.me/?text={share_text.replace(' ', '%20')}"
 st.link_button("🟢 SHARE ON WHATSAPP", whatsapp_link, use_container_width=True)
 
