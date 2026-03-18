@@ -8,24 +8,26 @@ st.set_page_config(page_title="Yalix Easy", page_icon="⚽")
 # --- TAKIM SEÇİMİ VE TASARIM AYARLARI ---
 st.sidebar.header("🎨 Customize Your App")
 team = st.sidebar.radio("Choose Your Team / Takımınızı Seçin:", 
-                         ("Galatasaray 🦁", "Fenerbahçe 🐤", "Beşiktaş 🦅"))
+                         ("Galatasaray 🦁", "Fenerbahçe 🐂", "Beşiktaş 🦅"))
 
-# Takımlara göre renk ve resim ayarları
+# Takımlara göre renk, resim ve güçlü slogan ayarları
 if team == "Galatasaray 🦁":
     primary_color = "#A32638" # Kırmızı
     secondary_color = "#FDB912" # Sarı
     img_url = "https://images.unsplash.com/photo-1546182990-dffeafbe841d?w=800"
-    caption = "Yalix Easy: The Voice of the Lion 🦁"
-elif team == "Fenerbahçe 🐤":
+    caption = "Yalix Easy: The Voice of the Lion 🦁 - Aslanın Sesi"
+elif team == "Fenerbahçe 🐂":
     primary_color = "#002366" # Lacivert
     secondary_color = "#FDB912" # Sarı
-    img_url = "https://images.unsplash.com/photo-1444464666168-49d633b867ad?w=800"
-    caption = "Yalix Easy: The Voice of the Canary 🐤"
-else: # Beşiktaş
+    # Fenerbahçe için Güçlü Boğa Resmi
+    img_url = "https://images.unsplash.com/photo-1599723023028-09559c38f1f7?w=800"
+    caption = "Yalix Easy: The Voice of the Bull 🐂 - Boğanın Sesi (Kadıköy Gücü)"
+else: # Beşiktaş 🦅
     primary_color = "#000000" # Siyah
     secondary_color = "#FFFFFF" # Beyaz
-    img_url = "https://images.unsplash.com/photo-1510333333694-272e2759e6c4?w=800"
-    caption = "Yalix Easy: The Voice of the Eagle 🦅"
+    # Beşiktaş için Heybetli Kartal Resmi
+    img_url = "https://images.unsplash.com/photo-1611689225620-3e70248bc0f0?w=800"
+    caption = "Yalix Easy: The Voice of the Black Eagle 🦅 - Kara Kartalın Sesi"
 
 # Dinamik CSS Entegrasyonu
 st.markdown(f"""
