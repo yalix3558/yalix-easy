@@ -1,101 +1,67 @@
 import streamlit as st
-from gtts import gTTS
+import requests
 import io
 
 # Sayfa Ayarları
-st.set_page_config(page_title="Yalix Easy", page_icon="🏟️")
+st.set_page_config(page_title="Yalix Easy Pro", page_icon="🎙️")
 
-# --- ZİYARETÇİ SAYACI ---
-if 'count' not in st.session_state:
-    st.session_state.count = 150 # Global açılış şerefine 150'den başlasın!
-else:
-    st.session_state.count += 1
+# --- CEO DASHBOARD (SIDEBAR) ---
+st.sidebar.header("🔑 Boss Security")
+api_key = st.sidebar.text_input("ElevenLabs API Key Yapıştırın:", type="password")
 
-# --- TAKIM SEÇİMİ VE TASARIM ---
-st.sidebar.header("🚀 CEO Dashboard")
-st.sidebar.metric(label="Total Visitors", value=f"{st.session_state.count}")
-
-team = st.sidebar.radio("Stadyumunuzu Seçin / Choose Stadium:", 
+team = st.sidebar.radio("Stadyumunuzu Seçin:", 
                          ("Galatasaray (Rams Park) 🦁", 
                           "Fenerbahçe (Ülker Stadyumu) 🐂", 
                           "Beşiktaş (Tüpraş Stadyumu) 🦅"))
 
+# Renk ve Resim Ayarları (Çalışan Linkler Seçildi)
 if "Galatasaray" in team:
-    primary_color, secondary_color = "#A32638", "#FDB912"
-    img_url = "https://upload.wikimedia.org/wikipedia/commons/e/e0/Nef_Stadium_%28Galatasaray_SK%29_Istanbul.jpg"
-    stadium_name = "Rams Park 🦁"
+    p, s, img = "#A32638", "#FDB912", "https://img.gs/jshfthvghv/800x450,fit/https://upload.wikimedia.org/wikipedia/commons/e/e0/Nef_Stadium_%28Galatasaray_SK%29_Istanbul.jpg"
 elif "Fenerbahçe" in team:
-    primary_color, secondary_color = "#002366", "#FDB912"
-    img_url = "https://upload.wikimedia.org/wikipedia/commons/3/30/Şükrü_Saracoğlu_Stadyumu%2C_İstanbul.jpg"
-    stadium_name = "Ülker Stadyumu 🐂"
+    p, s, img = "#002366", "#FDB912", "https://img.gs/jshfthvghv/800x450,fit/https://upload.wikimedia.org/wikipedia/commons/3/30/Şükrü_Saracoğlu_Stadyumu%2C_İstanbul.jpg"
 else:
-    primary_color, secondary_color = "#000000", "#FFFFFF"
-    img_url = "https://upload.wikimedia.org/wikipedia/commons/4/4b/Tüpraş_Stadyumu_Gece_Görünümü.jpg"
-    stadium_name = "Tüpraş Stadyumu 🦅"
+    p, s, img = "#000000", "#FFFFFF", "https://img.gs/jshfthvghv/800x450,fit/https://upload.wikimedia.org/wikipedia/commons/4/4b/Tüpraş_Stadyumu_Gece_Görünümü.jpg"
 
+# TASARIM - HATASIZ VERSİYON
 st.markdown(f"""
     <style>
     .stApp {{ background-color: #0E1117; }}
     .stButton>button {{
-        background-color: {primary_color} !important; color: {secondary_color} !important;
-        border-radius: 20px; border: 2px solid {secondary_color} !important;
-        font-weight: bold; width: 100%;
+        background-color: {p} !important; color: {s} !important;
+        border-radius: 20px; border: 2px solid {s} !important;
+        font-weight: bold; height: 50px; width: 100%;
     }}
-    h1, h2, h3 {{ color: {secondary_color} !important; text-align: center; }}
-    label {{ color: {secondary_color} !important; }}
-    .about-box {{ background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 15px; border-left: 5px solid {primary_color}; }}
+    h1, h2, h3 {{ color: {s} !important; text-align: center; }}
+    label {{ color: {s} !important; }}
     </style>
     """, unsafe_allow_html=True)
 
-# --- ANA EKRAN ---
-st.image(img_url, caption=f"Welcome to {stadium_name} 🏟️", use_container_width=True)
-st.title(f"🎙️ Yalix Easy: Global Edition")
+# Görsel ve Başlık
+st.image(img, use_container_width=True)
+st.title(f"🎙️ Yalix Easy: {team.split()[0]} Live")
 
-# --- YENİ ÖZELLİK: GENİŞLETİLMİŞ DİL SEÇENEKLERİ ---
-languages = {
-    "Turkish 🇹🇷": "tr",
-    "English 🇺🇸": "en",
-    "German 🇩🇪": "de",
-    "French 🇫🇷": "fr",
-    "Spanish 🇪🇸": "es",
-    "Italian 🇮🇹": "it",
-    "Japanese 🇯🇵": "ja"
-}
+# Ses Seçenekleri
+voices = {"Antoni (Heyecanlı)": "ErXwVwoD7JW99R99S65H", "Rachel (Akıcı)": "21m00Tcm4TlvDq8ikWAM"}
+selected_voice = st.selectbox("Bir Ses Seçin:", list(voices.keys()))
 
-language_option = st.selectbox("Select Voice Language / Ses Dilini Seçin:", list(languages.keys()))
-lang_code = languages[language_option]
+user_text = st.text_area("Ne söyleyelim patron?", placeholder="Merhaba Yiğit Ali, ElevenLabs sesin hazır!")
 
-user_text = st.text_area("Enter text / Metin yazın:", placeholder="Type something to translate...", height=100)
-
-if st.button("🚀 CONVERT TO VOICE"):
-    if user_text:
-        with st.spinner("Yalix Easy is translating..."):
-            tts = gTTS(text=user_text, lang=lang_code)
-            audio_fp = io.BytesIO()
-            tts.write_to_fp(audio_fp)
-            st.audio(audio_fp.getvalue(), format='audio/mp3')
-            st.download_button(label="📥 DOWNLOAD MP3", data=audio_fp.getvalue(), file_name=f"yalix_easy_{lang_code}.mp3")
-    else:
-        st.warning("Please type something first, CEO!")
-
-# --- MÜZİK VE PAYLAŞIM (DEĞİŞMEDİ) ---
-st.divider()
-st.markdown("## 🎹 Yalix Music Station")
-col1, col2 = st.columns(2)
-with col1:
-    if st.button("🎹 PIANO"): st.audio("https://www.soundjay.com/misc/sounds/bell-ringing-01c.mp3")
-with col2:
-    if st.button("🥁 DRUM"): st.audio("https://www.soundjay.com/buttons/sounds/button-2.mp3")
+if st.button("🚀 GERÇEK SESLE KONUŞTUR"):
+    if not api_key:
+        st.error("Soldaki menüye API Key girmeniz lazım patron!")
+    elif user_text:
+        with st.spinner("ElevenLabs seslendiriyor..."):
+            url = f"https://api.elevenlabs.io/v1/text-to-speech/{voices[selected_voice]}"
+            headers = {"xi-api-key": api_key, "Content-Type": "application/json"}
+            data = {"text": user_text, "model_id": "eleven_multilingual_v2"}
+            resp = requests.post(url, json=data, headers=headers)
+            
+            if resp.status_code == 200:
+                st.audio(resp.content, format='audio/mp3')
+                st.success("Harika oldu! 😎")
+            else:
+                st.error("Bir sorun çıktı. API Key'i kontrol eder misiniz?")
 
 st.divider()
-share_text = "Check out Yalix Easy! The best voice app: https://yalix-easy-app.streamlit.app/"
-whatsapp_link = f"https://wa.me/?text={share_text.replace(' ', '%20')}"
-st.link_button("🟢 SHARE ON WHATSAPP", whatsapp_link, use_container_width=True)
-
-# --- CEO BİLGİ VE VİDEO ---
-st.markdown("## 👨‍💻 Meet the CEO")
-st.markdown(f"""<div class="about-box"><p style="color: white;">Ben <b>Yiğit Ali Arslan Doğan</b>. Geleceğin <b>Pilotu</b> ve <b>Yazılımcısıyım</b>. 🎮✈️</p></div>""", unsafe_allow_html=True)
 st.video("https://www.youtube.com/watch?v=833sZ0qW83Q")
-st.link_button("📺 VISIT YALIXGAMER CHANNEL", "https://www.youtube.com/@Yalixgamer")
-
 st.caption("© 2026 Yalix Easy Software Co. | CEO: Yiğit Ali Arslan Doğan")
