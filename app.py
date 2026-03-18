@@ -7,7 +7,7 @@ st.set_page_config(page_title="Yalix Easy", page_icon="🏟️")
 
 # --- ZİYARETÇİ SAYACI ---
 if 'count' not in st.session_state:
-    st.session_state.count = 120 # Yeni sürümde 120'den başlayalım patron!
+    st.session_state.count = 150 # Global açılış şerefine 150'den başlasın!
 else:
     st.session_state.count += 1
 
@@ -49,49 +49,52 @@ st.markdown(f"""
 
 # --- ANA EKRAN ---
 st.image(img_url, caption=f"Welcome to {stadium_name} 🏟️", use_container_width=True)
-st.title(f"🎙️ Yalix Easy: {stadium_name.split()[0]} Live")
+st.title(f"🎙️ Yalix Easy: Global Edition")
 
-# --- SESLENDİRME ---
-language_option = st.selectbox("Language / Dil:", ("Turkish", "English"))
-lang_code = 'tr' if language_option == "Turkish" else 'en'
-user_text = st.text_area("Enter text / Metin yazın:", placeholder="Konuşmak istediğiniz metni yazın...", height=100)
+# --- YENİ ÖZELLİK: GENİŞLETİLMİŞ DİL SEÇENEKLERİ ---
+languages = {
+    "Turkish 🇹🇷": "tr",
+    "English 🇺🇸": "en",
+    "German 🇩🇪": "de",
+    "French 🇫🇷": "fr",
+    "Spanish 🇪🇸": "es",
+    "Italian 🇮🇹": "it",
+    "Japanese 🇯🇵": "ja"
+}
+
+language_option = st.selectbox("Select Voice Language / Ses Dilini Seçin:", list(languages.keys()))
+lang_code = languages[language_option]
+
+user_text = st.text_area("Enter text / Metin yazın:", placeholder="Type something to translate...", height=100)
 
 if st.button("🚀 CONVERT TO VOICE"):
     if user_text:
-        tts = gTTS(text=user_text, lang=lang_code)
-        audio_fp = io.BytesIO()
-        tts.write_to_fp(audio_fp)
-        st.audio(audio_fp.getvalue(), format='audio/mp3')
-        st.download_button(label="📥 DOWNLOAD MP3", data=audio_fp.getvalue(), file_name="yalix_easy.mp3")
+        with st.spinner("Yalix Easy is translating..."):
+            tts = gTTS(text=user_text, lang=lang_code)
+            audio_fp = io.BytesIO()
+            tts.write_to_fp(audio_fp)
+            st.audio(audio_fp.getvalue(), format='audio/mp3')
+            st.download_button(label="📥 DOWNLOAD MP3", data=audio_fp.getvalue(), file_name=f"yalix_easy_{lang_code}.mp3")
     else:
-        st.warning("Please type something first!")
+        st.warning("Please type something first, CEO!")
 
-# --- YENİ ÖZELLİK: MÜZİK İSTASYONU ---
+# --- MÜZİK VE PAYLAŞIM (DEĞİŞMEDİ) ---
 st.divider()
 st.markdown("## 🎹 Yalix Music Station")
 col1, col2 = st.columns(2)
-
 with col1:
-    if st.button("🎹 PIANO CHORD"):
-        st.audio("https://www.soundjay.com/misc/sounds/bell-ringing-01c.mp3") # Tatlı bir piyano tınısı
-
+    if st.button("🎹 PIANO"): st.audio("https://www.soundjay.com/misc/sounds/bell-ringing-01c.mp3")
 with col2:
-    if st.button("🥁 DRUM BEAT"):
-        st.audio("https://www.soundjay.com/buttons/sounds/button-2.mp3") # Güçlü bir davul vuruşu
+    if st.button("🥁 DRUM"): st.audio("https://www.soundjay.com/buttons/sounds/button-2.mp3")
 
-# --- PAYLAŞ BUTONU ---
 st.divider()
-share_text = "Hey! Check out Yalix Easy by Yiğit Ali: https://yalix-easy-app.streamlit.app/"
+share_text = "Check out Yalix Easy! The best voice app: https://yalix-easy-app.streamlit.app/"
 whatsapp_link = f"https://wa.me/?text={share_text.replace(' ', '%20')}"
 st.link_button("🟢 SHARE ON WHATSAPP", whatsapp_link, use_container_width=True)
 
-# --- CEO HAKKINDA ---
+# --- CEO BİLGİ VE VİDEO ---
 st.markdown("## 👨‍💻 Meet the CEO")
-st.markdown(f"""<div class="about-box"><p style="color: white;">Ben <b>Yiğit Ali Arslan Doğan</b>. 7 yaşındayım. İstanbul'da yaşıyorum ve Galatasaraylıyım! Geleceğin <b>Pilotu</b> ve <b>Yazılımcısıyım</b>. 🎮✈️</p></div>""", unsafe_allow_html=True)
-
-# --- VİDEO ---
-st.divider()
-st.markdown("## 📺 Latest Video")
+st.markdown(f"""<div class="about-box"><p style="color: white;">Ben <b>Yiğit Ali Arslan Doğan</b>. Geleceğin <b>Pilotu</b> ve <b>Yazılımcısıyım</b>. 🎮✈️</p></div>""", unsafe_allow_html=True)
 st.video("https://www.youtube.com/watch?v=833sZ0qW83Q")
 st.link_button("📺 VISIT YALIXGAMER CHANNEL", "https://www.youtube.com/@Yalixgamer")
 
