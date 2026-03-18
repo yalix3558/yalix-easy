@@ -12,21 +12,24 @@ team = st.sidebar.radio("Stadyumunuzu Seçin:",
                           "Fenerbahçe (Ülker Stadyumu) 🐂", 
                           "Beşiktaş (Tüpraş Stadyumu) 🦅"))
 
-# Takımlara göre renk ve STADYUM RESİMLERİ
+# Takımlara göre renk ve YENİ VE ÇALIŞAN STADYUM RESİMLERİ
 if "Galatasaray" in team:
     primary_color = "#A32638" # Kırmızı
     secondary_color = "#FDB912" # Sarı
-    img_url = "https://images.unsplash.com/photo-1598282367500-2f3b79ce4d13?w=800" # Rams Park atmosferi
+    # Güvenilir direct link: Rams Park atmosferi
+    img_url = "https://upload.wikimedia.org/wikipedia/commons/e/e0/Nef_Stadium_%28Galatasaray_SK%29_Istanbul.jpg" 
     stadium_name = "Rams Park 🦁"
 elif "Fenerbahçe" in team:
     primary_color = "#002366" # Lacivert
     secondary_color = "#FDB912" # Sarı
-    img_url = "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800" # Ülker Stadyumu atmosferi
+    # Güvenilir direct link: Ülker Stadyumu atmosferi
+    img_url = "https://upload.wikimedia.org/wikipedia/commons/3/30/Şükrü_Saracoğlu_Stadyumu%2C_İstanbul.jpg" 
     stadium_name = "Ülker Stadyumu 🐂"
 else: # Beşiktaş
     primary_color = "#000000" # Siyah
     secondary_color = "#FFFFFF" # Beyaz
-    img_url = "https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=800" # Tüpraş Stadyumu atmosferi
+    # Güvenilir direct link: Tüpraş Stadyumu atmosferi
+    img_url = "https://upload.wikimedia.org/wikipedia/commons/4/4b/Tüpraş_Stadyumu_Gece_Görünümü.jpg" 
     stadium_name = "Tüpraş Stadyumu 🦅"
 
 # Dinamik CSS Entegrasyonu
@@ -49,8 +52,13 @@ st.markdown(f"""
     </style>
     """, unsafe_allow_html=True)
 
-# --- STADYUM LOGOSU VE BAŞLIK ---
-st.image(img_url, caption=f"Welcome to {stadium_name} 🏟️", use_container_width=True)
+# --- STADYUM GÖRSELİ VE BAŞLIK ---
+# Hata kontrolü ekleyelim - eğer resim açılmazsa placeholder göstersin
+try:
+    st.image(img_url, caption=f"Welcome to {stadium_name} 🏟️", use_container_width=True)
+except Exception:
+    st.warning("⚠️ Stadyum resmi şu an yüklenemedi patron, ama ses motorumuz çalışıyor!")
+
 st.title(f"🎙️ Yalix Easy: {stadium_name.split()[0]} Live")
 st.markdown("### *Your Voice, Your Stadium.*")
 
